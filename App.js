@@ -1,13 +1,41 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+import Chat from './screen/Chat'
+import Mappe from './screen/Map'
+import Home from './screen/Home'
+import pseudo from './store/pseudo.reducer'
+import { createStore, combineReducers } from 'redux';
+import { Provider } from 'react-redux';
+const store = createStore(combineReducers({ pseudo }));
 
-export default function App() {
+
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator()
+
+const bottomTabNav = () => {
+  return(
+    <Tab.Navigator>
+      <Tab.Screen name="map" component={Mappe} />
+      <Tab.Screen name="chat" component={Chat} />
+    </Tab.Navigator>
+  )
+}
+
+
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: true }}>
+          <Stack.Screen name="home" component={Home} />
+          <Stack.Screen name="bottomTabNav" component={bottomTabNav} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
+    
   );
 }
 
@@ -17,5 +45,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-  },
+  }
 });
+
+export default App;
